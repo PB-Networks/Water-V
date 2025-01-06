@@ -4,38 +4,226 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="./assets/ultraviolet.png" type="image/png">
-  <title>Ultraviolet</title>
+  <link rel="shortcut icon" href="Wave-V.png" type="image/png">
+  <title>Wave-V</title>
 
-  <!-- Meta tags for SEO -->
-  <meta property="og:title" content="Ultraviolet">
-  <meta property="og:description"
-    content="Ultraviolet is a web proxy for unblocking websites using service workers and interception." />
-  <meta property="og:image" content="/assets/ultraviolet.png" />
+  <meta property="og:title" content="Wave-V">
+  <meta property="og:description" content="Wave-V is a uv made proxy made by xdevman9" />
+  <meta property="og:image" content="Wave-V.png" />
   <meta name="theme-color" content="#262262" />
 
-  <!-- Styles and fonts -->
-  <link rel="stylesheet" href="./assets/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
-    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'IBM Plex Sans', sans-serif;
+      cursor: none; /* Hide default cursor */
+    }
 
-  <!-- Scripts -->
+    body {
+      background: linear-gradient(135deg, #0d1117, #162447, #1b1f3b);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      background: rgba(15, 20, 50, 0.9);
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      text-align: center;
+      width: 400px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .description {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      color: #00aaff;
+    }
+
+    .input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid rgba(0, 170, 255, 0.4);
+      border-radius: 50px;
+      font-size: 1rem;
+      outline: none;
+      background: rgba(0, 0, 0, 0.2);
+      color: #fff;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+    }
+
+    .input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+    }
+
+    .input:hover,
+    .input:focus {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: #00aaff;
+      box-shadow: 0 0 20px #00aaff, 0 0 40px rgba(0, 170, 255, 0.5);
+    }
+
+    .suggestions {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      z-index: 3;
+      margin-top: 5px;
+      padding: 5px 0;
+    }
+
+    .suggestions div {
+      padding: 10px;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1rem;
+      text-align: left;
+    }
+
+    .suggestions div:hover {
+      background-color: #00aaff;
+    }
+
+    .ocean-waves {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #030f67;
+      animation: wave 10s infinite linear;
+      opacity: 0.2;
+      z-index: 0;
+    }
+
+    @keyframes wave {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .custom-cursor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle, rgba(0, 170, 255, 0.5), transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, opacity 0.2s;
+      z-index: 9999;
+    }
+
+    .custom-cursor.hidden {
+      opacity: 0;
+    }
+
+    .custom-cursor.expand {
+      transform: translate(-50%, -50%) scale(2);
+      opacity: 0.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ocean-waves"></div>
+
+  <div class="container">
+    <p class="description">Wave-V</p>
+    <input type="text" class="input" placeholder="Enter a search query or URL" id="searchInput">
+    <div class="suggestions" id="suggestionsList"></div>
+  </div>
+
+  <!-- UV Scripts -->
+  <script src="./assets/script.js" defer></script>
   <script src="./uv/uv.bundle.js"></script>
   <script src="./uv/uv.config.js"></script>
   <script src="./assets/register-sw.js"></script>
 
-</head>
+  <script>
+    const cursor = document.createElement('div');
+    cursor.classList.add('custom-cursor');
+    document.body.appendChild(cursor);
 
-<body>
-  <div class="container">
-    <p class="description">Water-V</p>
-    <input type="text" class="input" placeholder="Enter a search query or URL">
-  </div>
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsList = document.getElementById('suggestionsList');
 
-  <script src="./assets/script.js" defer></script>
+    const suggestions = [
+      'discord.com/login',
+      'youtube.com',
+      'now.gg',
+      'nowgg.lol',
+      'twitch.tv'
+    ];
+
+    searchInput.addEventListener('input', function () {
+      const query = searchInput.value.toLowerCase();
+      const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(query));
+
+      suggestionsList.innerHTML = '';
+      if (query) {
+        filteredSuggestions.forEach(suggestion => {
+          const suggestionItem = document.createElement('div');
+          suggestionItem.textContent = suggestion;
+          suggestionItem.addEventListener('click', function () {
+            searchInput.value = suggestion;
+            window.location.href = `https://${suggestion}`;
+          });
+          suggestionsList.appendChild(suggestionItem);
+        });
+      }
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.top = `${e.clientY}px`;
+      cursor.style.left = `${e.clientX}px`;
+    });
+
+    document.addEventListener('mousedown', () => {
+      cursor.classList.add('expand');
+    });
+
+    document.addEventListener('mouseup', () => {
+      cursor.classList.remove('expand');
+    });
+
+    document.addEventListener('mouseout', () => {
+      cursor.classList.add('hidden');
+    });
+
+    document.addEventListener('mouseover', () => {
+      cursor.classList.remove('hidden');
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!event.target.closest('.container')) {
+        suggestionsList.innerHTML = ''; 
+      }
+    });
+  </script>
+
 </body>
 
 </html>
