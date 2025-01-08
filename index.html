@@ -8,9 +8,12 @@
   <title>Wave-V</title>
 
   <meta property="og:title" content="Wave-V">
-  <meta property="og:description" content="Wave-V is a uv made proxy made by xdevman9" />
+  <meta property="og:description" content="Wave-V is a UV made proxy created by xdevman9" />
   <meta property="og:image" content="assets/Wave-V.png" />
   <meta name="theme-color" content="#262262" />
+
+  <!-- Include Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
   <style>
     * {
@@ -117,11 +120,13 @@
       0% {
         transform: translateX(0);
       }
+
       100% {
         transform: translateX(-100%);
       }
     }
 
+    /* Custom Cursor */
     .custom-cursor {
       position: fixed;
       top: 0;
@@ -144,16 +149,111 @@
       transform: translate(-50%, -50%) scale(2);
       opacity: 0.5;
     }
+
+    /* Hamburger Menu */
+    .hamburger-menu {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 20px;
+      cursor: pointer;
+      z-index: 999;
+    }
+
+    .hamburger-menu div {
+      height: 4px;
+      background-color: #fff;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+    }
+
+    /* Navbar and Pages */
+    .navbar-pages {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 250px;
+      background-color: rgba(0, 0, 0, 0.8);
+      height: 100%;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      padding: 50px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+
+    .navbar-pages a {
+      color: #fff;
+      font-size: 2rem;
+      margin: 20px 0;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-pages a:hover {
+      background-color: #00aaff;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .navbar-pages a i {
+      margin-right: 10px;
+    }
+
+    /* Toggle Hamburger */
+    .hamburger-menu.open div:nth-child(1) {
+      transform: rotate(45deg);
+      position: relative;
+      top: 7px;
+    }
+
+    .hamburger-menu.open div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-menu.open div:nth-child(3) {
+      transform: rotate(-45deg);
+      position: relative;
+      top: -7px;
+    }
+
+    .navbar-pages.open {
+      transform: translateX(0);
+    }
   </style>
 </head>
 
 <body>
+
+
   <div class="ocean-waves"></div>
 
+ 
   <div class="container">
     <p class="description">Wave-V</p>
     <input type="text" class="input" placeholder="Enter a search query or URL" id="searchInput">
     <div class="suggestions" id="suggestionsList"></div>
+  </div>
+
+  
+  <div class="hamburger-menu" id="hamburgerMenu">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+
+ 
+  <div class="navbar-pages" id="navbarPages">
+    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+    <a href="#"><i class="fas fa-gamepad"></i> Game</a>
+    <a href="#"><i class="fas fa-cogs"></i> Settings</a>
   </div>
 
   <!-- UV Scripts -->
@@ -169,6 +269,8 @@
 
     const searchInput = document.getElementById('searchInput');
     const suggestionsList = document.getElementById('suggestionsList');
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const navbarPages = document.getElementById('navbarPages');
 
     const suggestions = [
       'discord.com/login',
@@ -217,9 +319,17 @@
       cursor.classList.remove('hidden');
     });
 
+  
+    hamburgerMenu.addEventListener('click', function () {
+      navbarPages.classList.toggle('open');
+      hamburgerMenu.classList.toggle('open');
+    });
+
+    
     document.addEventListener('click', function (event) {
-      if (!event.target.closest('.container')) {
-        suggestionsList.innerHTML = ''; 
+      if (!event.target.closest('#hamburgerMenu') && !event.target.closest('#navbarPages')) {
+        navbarPages.classList.remove('open');
+        hamburgerMenu.classList.remove('open');
       }
     });
   </script>
